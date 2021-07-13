@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GaussianMatrix.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">finnmath</a> &gt; <a href="index.source.html" class="el_package">io.github.ltennstedt.finnmath.linear.matrix</a> &gt; <span class="el_source">GaussianMatrix.kt</span></div><h1>GaussianMatrix.kt</h1><pre class="source lang-java linenums">package io.github.ltennstedt.finnmath.linear.matrix
+
+import io.github.ltennstedt.finnmath.linear.field.GaussianQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.vector.GaussianVector
+import io.github.ltennstedt.finnmath.number.complex.Complex
+import io.github.ltennstedt.finnmath.number.complex.Gaussian
+import java.math.BigDecimal
+import java.math.MathContext
+
+<span class="nc" id="L11">public class GaussianMatrix(</span>
+    entries: List&lt;MatrixEntry&lt;Gaussian&gt;&gt;
+<span class="nc" id="L13">) : AbstractMatrix&lt;Gaussian, Complex, GaussianVector, GaussianMatrix, Long, Double&gt;(</span>
+<span class="nc" id="L14">    entries</span>
+) {
+    override val isInvertible: Boolean
+<span class="nc" id="L17">        get() = TODO(&quot;Not yet implemented&quot;)</span>
+    override val quotientField: QuotientField&lt;Gaussian, Complex, GaussianVector, GaussianMatrix&gt;
+<span class="nc" id="L19">        get() = GaussianQuotientField</span>
+
+    override fun maxAbsColumnSumNorm(): Long {
+<span class="nc" id="L22">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun maxAbsRowSumNorm(): Long {
+<span class="nc" id="L26">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun frobeniusNormPow2(): Double {
+<span class="nc" id="L30">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun frobeniusNorm(mathContext: MathContext): BigDecimal {
+<span class="nc" id="L34">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun maxNorm(): Long {
+<span class="nc" id="L38">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

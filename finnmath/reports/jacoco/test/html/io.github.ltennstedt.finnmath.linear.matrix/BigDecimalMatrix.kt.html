@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BigDecimalMatrix.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">finnmath</a> &gt; <a href="index.source.html" class="el_package">io.github.ltennstedt.finnmath.linear.matrix</a> &gt; <span class="el_source">BigDecimalMatrix.kt</span></div><h1>BigDecimalMatrix.kt</h1><pre class="source lang-java linenums">package io.github.ltennstedt.finnmath.linear.matrix
+
+import io.github.ltennstedt.finnmath.linear.field.BigDecimalQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.vector.BigDecimalVector
+import java.math.BigDecimal
+import java.math.MathContext
+
+<span class="nc" id="L9">public class BigDecimalMatrix(</span>
+    entries: List&lt;MatrixEntry&lt;BigDecimal&gt;&gt;
+<span class="nc" id="L11">) : AbstractMatrix&lt;BigDecimal, BigDecimal, BigDecimalVector, BigDecimalMatrix, BigDecimal, BigDecimal&gt;(</span>
+<span class="nc" id="L12">    entries</span>
+) {
+    override val isInvertible: Boolean
+<span class="nc" id="L15">        get() = TODO(&quot;Not yet implemented&quot;)</span>
+    override val quotientField: QuotientField&lt;BigDecimal, BigDecimal, BigDecimalVector, BigDecimalMatrix&gt;
+<span class="nc" id="L17">        get() = BigDecimalQuotientField</span>
+
+    override fun maxAbsColumnSumNorm(): BigDecimal {
+<span class="nc" id="L20">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun maxAbsRowSumNorm(): BigDecimal {
+<span class="nc" id="L24">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun frobeniusNormPow2(): BigDecimal {
+<span class="nc" id="L28">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun frobeniusNorm(mathContext: MathContext): BigDecimal {
+<span class="nc" id="L32">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+
+    override fun maxNorm(): BigDecimal {
+<span class="nc" id="L36">        TODO(&quot;Not yet implemented&quot;)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
