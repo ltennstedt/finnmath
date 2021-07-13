@@ -16,17 +16,19 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.BigComplexMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.BigComplexVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.BigComplex
 
 /**
- * Single implementation of a [Field] of [BigComplexs][BigComplex]
+ * Single implementation of a [QuotientField] of [BigComplexs][BigComplex]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object BigComplexField : Field<BigComplex, BigComplex, BigComplexVector> {
+public object BigComplexQuotientField : QuotientField<BigComplex, BigComplex, BigComplexVector, BigComplexMatrix> {
     override val addition: (a: BigComplex, b: BigComplex) -> BigComplex
         get() = BigComplex::add
     override val subtraction: (a: BigComplex, b: BigComplex) -> BigComplex
@@ -43,6 +45,8 @@ public object BigComplexField : Field<BigComplex, BigComplex, BigComplexVector> 
         get() = BigComplex.ZERO
     override val one: BigComplex
         get() = BigComplex.ONE
-    override val vectorConstructor: (s: Set<VectorEntry<BigComplex>>) -> BigComplexVector
+    override val vectorConstructor: (l: List<VectorEntry<BigComplex>>) -> BigComplexVector
         get() = { BigComplexVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<BigComplex>>) -> BigComplexMatrix
+        get() = { BigComplexMatrix(it) }
 }

@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.BigComplexField;
-import io.github.ltennstedt.finnmath.linear.field.Field;
+import io.github.ltennstedt.finnmath.linear.field.BigComplexQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.BigComplexMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.BigComplexVector;
 import io.github.ltennstedt.finnmath.linear.vector.BigGaussianVector;
 import io.github.ltennstedt.finnmath.number.complex.BigComplex;
@@ -47,7 +48,7 @@ public final class BigComplexVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<BigComplex, BigComplex, BigComplexVector> getField() {
-        return BigComplexField.INSTANCE;
+    protected @NotNull QuotientField<BigComplex, BigComplex, BigComplexVector, BigComplexMatrix> getField() {
+        return BigComplexQuotientField.INSTANCE;
     }
 }

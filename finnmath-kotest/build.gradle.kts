@@ -172,7 +172,7 @@ repositories {
 }
 dependencies {
     api(project(":finnmath"))
-    val kotestVersion = "4.6.0"
+    val kotestVersion = "4.6.1"
     api("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")

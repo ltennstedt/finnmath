@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.Field;
-import io.github.ltennstedt.finnmath.linear.field.GaussianField;
+import io.github.ltennstedt.finnmath.linear.field.GaussianQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.GaussianMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.GaussianVector;
 import io.github.ltennstedt.finnmath.number.complex.Complex;
 import io.github.ltennstedt.finnmath.number.complex.Gaussian;
@@ -47,7 +48,7 @@ public final class GaussianVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<Gaussian, Complex, GaussianVector> getField() {
-        return GaussianField.INSTANCE;
+    protected @NotNull QuotientField<Gaussian, Complex, GaussianVector, GaussianMatrix> getField() {
+        return GaussianQuotientField.INSTANCE;
     }
 }

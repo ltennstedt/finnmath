@@ -26,8 +26,9 @@ import io.github.ltennstedt.finnmath.linear.builder.BigIntegerVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
 import io.github.ltennstedt.finnmath.linear.builder.bigDecimalVector
 import io.github.ltennstedt.finnmath.linear.builder.bigGaussianVector
-import io.github.ltennstedt.finnmath.linear.field.BigIntegerField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.BigIntegerQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.BigIntegerMatrix
 import org.apiguardian.api.API
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -46,12 +47,12 @@ import java.math.BigInteger
 @Beta
 @Immutable
 public class BigIntegerVector(
-    entries: Set<VectorEntry<BigInteger>>
+    entries: List<VectorEntry<BigInteger>>
 ) : AbstractVector<BigInteger, BigDecimal, BigIntegerVector, BigDecimal, BigInteger>(
     entries
 ) {
-    override val field: Field<BigInteger, BigDecimal, BigIntegerVector>
-        get() = BigIntegerField
+    override val quotientField: QuotientField<BigInteger, BigDecimal, BigIntegerVector, BigIntegerMatrix>
+        get() = BigIntegerQuotientField
 
     override fun taxicabNorm(): BigDecimal = elements.map { it.abs() }.reduce { a, b -> a + b }.toBigDecimal()
 

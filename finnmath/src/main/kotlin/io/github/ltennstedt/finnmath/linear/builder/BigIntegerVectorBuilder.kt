@@ -16,7 +16,7 @@
 
 package io.github.ltennstedt.finnmath.linear.builder
 
-import io.github.ltennstedt.finnmath.linear.field.BigIntegerField
+import io.github.ltennstedt.finnmath.linear.field.BigIntegerQuotientField
 import io.github.ltennstedt.finnmath.linear.vector.BigIntegerVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import java.math.BigInteger
@@ -41,6 +41,6 @@ public fun bigIntegerVector(init: BigIntegerVectorBuilder.() -> Unit): BigIntege
  */
 public class BigIntegerVectorBuilder : AbstractVectorBuilder<BigInteger, BigIntegerVector>() {
     override var computationOfAbsent: (Int) -> BigInteger = { _ -> BigInteger.ZERO }
-    override val vectorConstructor: (s: Set<VectorEntry<BigInteger>>) -> BigIntegerVector
-        get() = BigIntegerField.vectorConstructor
+    override val vectorConstructor: (l: List<VectorEntry<BigInteger>>) -> BigIntegerVector
+        get() = BigIntegerQuotientField.vectorConstructor
 }

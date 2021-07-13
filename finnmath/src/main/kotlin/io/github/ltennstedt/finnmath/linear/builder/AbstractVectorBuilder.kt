@@ -56,7 +56,7 @@ public abstract class AbstractVectorBuilder<E : Number, V> {
      *
      * @since 0.0.1
      */
-    protected abstract val vectorConstructor: (m: Set<VectorEntry<E>>) -> V
+    protected abstract val vectorConstructor: (l: List<VectorEntry<E>>) -> V
 
     /**
      * Provides an entry block
@@ -91,8 +91,7 @@ public abstract class AbstractVectorBuilder<E : Number, V> {
         for (i in 1..size) {
             entries.none { it.index == i }.whenTrue { entries.add(VectorEntry(i, computationOfAbsent(i))) }
         }
-        entries.sort()
-        return vectorConstructor(entries.toSet())
+        return vectorConstructor(entries)
     }
 
     override fun toString(): String = MoreObjects.toStringHelper(this)

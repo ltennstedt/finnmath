@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.BigGaussianField;
-import io.github.ltennstedt.finnmath.linear.field.Field;
+import io.github.ltennstedt.finnmath.linear.field.BigGaussianQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.BigGaussianMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.BigGaussianVector;
 import io.github.ltennstedt.finnmath.number.complex.BigComplex;
 import io.github.ltennstedt.finnmath.number.complex.BigGaussian;
@@ -47,7 +48,7 @@ public final class BigGaussianVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<BigGaussian, BigComplex, BigGaussianVector> getField() {
-        return BigGaussianField.INSTANCE;
+    protected @NotNull QuotientField<BigGaussian, BigComplex, BigGaussianVector, BigGaussianMatrix> getField() {
+        return BigGaussianQuotientField.INSTANCE;
     }
 }

@@ -22,8 +22,9 @@ import io.github.ltennstedt.finnmath.linear.builder.GaussianVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
 import io.github.ltennstedt.finnmath.linear.builder.bigGaussianVector
 import io.github.ltennstedt.finnmath.linear.builder.complexVector
-import io.github.ltennstedt.finnmath.linear.field.Field
-import io.github.ltennstedt.finnmath.linear.field.GaussianField
+import io.github.ltennstedt.finnmath.linear.field.GaussianQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.GaussianMatrix
 import io.github.ltennstedt.finnmath.number.complex.Complex
 import io.github.ltennstedt.finnmath.number.complex.Gaussian
 import org.apiguardian.api.API
@@ -44,12 +45,12 @@ import kotlin.math.sqrt
 @Beta
 @Immutable
 public class GaussianVector(
-    entries: Set<VectorEntry<Gaussian>>
+    entries: List<VectorEntry<Gaussian>>
 ) : AbstractVector<Gaussian, Complex, GaussianVector, Double, Gaussian>(
     entries
 ) {
-    override val field: Field<Gaussian, Complex, GaussianVector>
-        get() = GaussianField
+    override val quotientField: QuotientField<Gaussian, Complex, GaussianVector, GaussianMatrix>
+        get() = GaussianQuotientField
 
     override fun taxicabNorm(): Double = elements.map { it.abs() }.reduce { a, b -> a + b }
 

@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.DoubleField;
-import io.github.ltennstedt.finnmath.linear.field.Field;
+import io.github.ltennstedt.finnmath.linear.field.DoubleQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.DoubleMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.DoubleVector;
 import org.apiguardian.api.API;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public final class DoubleVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<Double, Double, DoubleVector> getField() {
-        return DoubleField.INSTANCE;
+    protected @NotNull QuotientField<Double, Double, DoubleVector, DoubleMatrix> getField() {
+        return DoubleQuotientField.INSTANCE;
     }
 }

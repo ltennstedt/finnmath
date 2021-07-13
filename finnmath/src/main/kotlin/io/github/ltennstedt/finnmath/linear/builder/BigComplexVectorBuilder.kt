@@ -16,7 +16,7 @@
 
 package io.github.ltennstedt.finnmath.linear.builder
 
-import io.github.ltennstedt.finnmath.linear.field.BigComplexField
+import io.github.ltennstedt.finnmath.linear.field.BigComplexQuotientField
 import io.github.ltennstedt.finnmath.linear.vector.BigComplexVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.BigComplex
@@ -41,6 +41,6 @@ public fun bigComplexVector(init: BigComplexVectorBuilder.() -> Unit): BigComple
  */
 public class BigComplexVectorBuilder : AbstractVectorBuilder<BigComplex, BigComplexVector>() {
     override var computationOfAbsent: (Int) -> BigComplex = { _ -> BigComplex.ZERO }
-    override val vectorConstructor: (s: Set<VectorEntry<BigComplex>>) -> BigComplexVector
-        get() = BigComplexField.vectorConstructor
+    override val vectorConstructor: (l: List<VectorEntry<BigComplex>>) -> BigComplexVector
+        get() = BigComplexQuotientField.vectorConstructor
 }

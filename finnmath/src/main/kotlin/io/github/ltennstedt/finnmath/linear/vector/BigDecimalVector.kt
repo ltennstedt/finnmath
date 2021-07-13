@@ -22,8 +22,9 @@ import io.github.ltennstedt.finnmath.extension.sqrt
 import io.github.ltennstedt.finnmath.extension.toBigComplex
 import io.github.ltennstedt.finnmath.linear.builder.BigDecimalVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
-import io.github.ltennstedt.finnmath.linear.field.BigDecimalField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.BigDecimalQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.BigDecimalMatrix
 import org.apiguardian.api.API
 import java.math.BigDecimal
 import java.math.MathContext
@@ -42,12 +43,12 @@ import java.math.MathContext
 @Beta
 @Immutable
 public class BigDecimalVector(
-    entries: Set<VectorEntry<BigDecimal>>
+    entries: List<VectorEntry<BigDecimal>>
 ) : AbstractVector<BigDecimal, BigDecimal, BigDecimalVector, BigDecimal, BigDecimal>(
     entries
 ) {
-    override val field: Field<BigDecimal, BigDecimal, BigDecimalVector>
-        get() = BigDecimalField
+    override val quotientField: QuotientField<BigDecimal, BigDecimal, BigDecimalVector, BigDecimalMatrix>
+        get() = BigDecimalQuotientField
 
     /**
      * Returns the sum of this and the [summand] based on the [mathContext]
@@ -57,9 +58,7 @@ public class BigDecimalVector(
      */
     public fun add(summand: BigDecimalVector, mathContext: MathContext): BigDecimalVector {
         require(size == summand.size) { "Equal sizes expected but $size!=${summand.size}" }
-        return BigDecimalVector(
-            entries.sorted().map { (i, e) -> VectorEntry(i, e.add(summand[i], mathContext)) }.toSet()
-        )
+        return BigDecimalVector(entries.map { (i, e) -> VectorEntry(i, e.add(summand[i], mathContext)) })
     }
 
     /**
@@ -70,9 +69,7 @@ public class BigDecimalVector(
      */
     public fun subtract(subtrahend: BigDecimalVector, mathContext: MathContext): BigDecimalVector {
         require(size == subtrahend.size) { "Equal sizes expected but $size!=${subtrahend.size}" }
-        return BigDecimalVector(
-            entries.sorted().map { (i, e) -> VectorEntry(i, e.subtract(subtrahend[i], mathContext)) }.toSet()
-        )
+        return BigDecimalVector(entries.map { (i, e) -> VectorEntry(i, e.subtract(subtrahend[i], mathContext)) })
     }
 
     /**
@@ -83,7 +80,7 @@ public class BigDecimalVector(
      */
     public fun dotProduct(other: BigDecimalVector, mathContext: MathContext): BigDecimal {
         require(size == other.size) { "Equal sizes expected but $size!=${other.size}" }
-        return entries.sorted()
+        return entries
             .map { (i, e) -> VectorEntry(i, e.multiply(other[i], mathContext)) }
             .map { it.element }
             .reduce { a, b -> a.add(b, mathContext) }
@@ -94,9 +91,8 @@ public class BigDecimalVector(
      *
      * @since 0.0.1
      */
-    public fun scalarMultiply(scalar: BigDecimal, mathContext: MathContext): BigDecimalVector = BigDecimalVector(
-        entries.sorted().map { (i, e) -> VectorEntry(i, scalar.multiply(e, mathContext)) }.toSet()
-    )
+    public fun scalarMultiply(scalar: BigDecimal, mathContext: MathContext): BigDecimalVector =
+        BigDecimalVector(entries.map { (i, e) -> VectorEntry(i, scalar.multiply(e, mathContext)) })
 
     /**
      * Returns the negated [AbstractVector] based on the [mathContext]

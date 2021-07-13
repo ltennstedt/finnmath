@@ -18,7 +18,7 @@ package io.github.ltennstedt.finnmath.linear.vector
 
 import com.google.common.annotations.Beta
 import com.google.common.base.MoreObjects
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
 import org.apiguardian.api.API
 import java.io.Serializable
 import java.util.Objects
@@ -31,9 +31,7 @@ import java.util.Objects
  * @param V type of vector
  * @param N type of taxicab and max norm
  * @param P type of inner product
- * @property entries entries
  * @constructor Constructs an AbstractVector
- * @throws IllegalArgumentException if [entries] is empty
  * @throws IllegalArgumentException if [indices] `!= expectedIndices`
  * @author Lars Tennstedt
  * @since 0.0.1
@@ -41,21 +39,28 @@ import java.util.Objects
 @API(status = API.Status.EXPERIMENTAL, since = "0.0.1")
 @Beta
 public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<E, Q, V, N, P>, N : Number, P>(
-    public val entries: Set<VectorEntry<E>>
+    entries: List<VectorEntry<E>>
 ) : Serializable {
+    /**
+     * Entries
+     *
+     * @since 0.0.1
+     */
+    public val entries: List<VectorEntry<E>> = entries.sorted()
+
     /**
      * Indices
      *
      *  @since 0.0.1
      */
-    public val indices: Set<Int> by lazy { entries.map { it.index }.toSortedSet() }
+    public val indices: List<Int> by lazy { this.entries.map { it.index } }
 
     /**
      * Elements
      *
      * @since 0.0.1
      */
-    public val elements: List<E> by lazy { entries.map { it.element } }
+    public val elements: List<E> by lazy { this.entries.map { it.element } }
 
     /**
      * Size
@@ -70,11 +75,11 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      *
      * @since 0.0.1
      */
-    protected abstract val field: Field<E, Q, V>
+    protected abstract val quotientField: QuotientField<E, Q, V, *>
 
     init {
         require(entries.isNotEmpty()) { "indexToElement expected not to be empty but map = $entries" }
-        val expectedIndices = (1..size).toSet()
+        val expectedIndices = (1..size).toList()
         require(indices == expectedIndices) {
             "expected indices == expectedIndices but $indices != $expectedIndices"
         }
@@ -88,7 +93,9 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      */
     public fun add(summand: V): V {
         require(size == summand.size) { "Equal sizes expected but $size!=${summand.size}" }
-        return field.vectorConstructor(entries.map { (i, e) -> VectorEntry(i, field.addition(e, summand[i])) }.toSet())
+        return quotientField.vectorConstructor(
+            entries.map { (i, e) -> VectorEntry(i, quotientField.addition(e, summand[i])) }
+        )
     }
 
     /**
@@ -99,8 +106,8 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      */
     public fun subtract(subtrahend: V): V {
         require(size == subtrahend.size) { "Equal sizes expected but $size!=${subtrahend.size}" }
-        return field.vectorConstructor(
-            entries.map { (i, e) -> VectorEntry(i, field.subtraction(e, subtrahend[i])) }.toSet()
+        return quotientField.vectorConstructor(
+            entries.map { (i, e) -> VectorEntry(i, quotientField.subtraction(e, subtrahend[i])) }
         )
     }
 
@@ -112,7 +119,7 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      */
     public fun dotProduct(other: V): E {
         require(size == other.size) { "Equal sizes expected but $size!=${other.size}" }
-        return entries.map { (i, e) -> field.multiplication(e, other[i]) }.reduce(field.addition)
+        return entries.map { (i, e) -> quotientField.multiplication(e, other[i]) }.reduce(quotientField.addition)
     }
 
     /**
@@ -120,15 +127,16 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      *
      * @since 0.0.1
      */
-    public fun scalarMultiply(scalar: E): V =
-        field.vectorConstructor(entries.map { (i, e) -> VectorEntry(i, field.multiplication(scalar, e)) }.toSet())
+    public fun scalarMultiply(scalar: E): V = quotientField.vectorConstructor(
+        entries.map { (i, e) -> VectorEntry(i, quotientField.multiplication(scalar, e)) }
+    )
 
     /**
      * Returns the negated [AbstractVector]
      *
      * @since 0.0.1
      */
-    public fun negate(): V = scalarMultiply(field.negation(field.one))
+    public fun negate(): V = scalarMultiply(quotientField.negation(quotientField.one))
 
     /**
      * Returns if this is orthogonal to [other]
@@ -138,7 +146,7 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      */
     public fun orthogonalTo(other: V): Boolean {
         require(size == other.size) { "Equal sizes expected but $size!=${other.size}" }
-        return field.equalityByComparing(this * other, field.zero)
+        return quotientField.equalityByComparing(this * other, quotientField.zero)
     }
 
     /**
@@ -252,7 +260,7 @@ public abstract class AbstractVector<E : Number, Q : Number, V : AbstractVector<
      */
     public fun equalsByComparing(other: V): Boolean {
         require(size == other.size) { "Equal sizes expected but $size != ${other.size}" }
-        return entries.all { (i, e) -> field.equalityByComparing(e, other[i]) }
+        return entries.all { (i, e) -> quotientField.equalityByComparing(e, other[i]) }
     }
 
     /**

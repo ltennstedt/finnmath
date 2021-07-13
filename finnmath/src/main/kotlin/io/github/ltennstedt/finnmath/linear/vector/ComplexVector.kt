@@ -20,8 +20,9 @@ import com.google.common.annotations.Beta
 import com.google.errorprone.annotations.Immutable
 import io.github.ltennstedt.finnmath.linear.builder.ComplexVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
-import io.github.ltennstedt.finnmath.linear.field.ComplexField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.ComplexQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.ComplexMatrix
 import io.github.ltennstedt.finnmath.number.complex.Complex
 import org.apiguardian.api.API
 import kotlin.math.pow
@@ -41,12 +42,12 @@ import kotlin.math.sqrt
 @Beta
 @Immutable
 public class ComplexVector(
-    entries: Set<VectorEntry<Complex>>
+    entries: List<VectorEntry<Complex>>
 ) : AbstractVector<Complex, Complex, ComplexVector, Double, Complex>(
     entries
 ) {
-    override val field: Field<Complex, Complex, ComplexVector>
-        get() = ComplexField
+    override val quotientField: QuotientField<Complex, Complex, ComplexVector, ComplexMatrix>
+        get() = ComplexQuotientField
 
     override fun taxicabNorm(): Double = elements.map { it.abs() }.reduce { a, b -> a + b }
 

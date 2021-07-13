@@ -16,18 +16,20 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.BigIntegerMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.BigIntegerVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import java.math.BigDecimal
 import java.math.BigInteger
 
 /**
- * Single implementation of a [Field] of [BigIntegers][BigInteger]
+ * Single implementation of a [QuotientField] of [BigIntegers][BigInteger]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object BigIntegerField : Field<BigInteger, BigDecimal, BigIntegerVector> {
+public object BigIntegerQuotientField : QuotientField<BigInteger, BigDecimal, BigIntegerVector, BigIntegerMatrix> {
     override val addition: (a: BigInteger, b: BigInteger) -> BigInteger
         get() = BigInteger::add
     override val subtraction: (a: BigInteger, b: BigInteger) -> BigInteger
@@ -44,6 +46,8 @@ public object BigIntegerField : Field<BigInteger, BigDecimal, BigIntegerVector> 
         get() = BigInteger.ZERO
     override val one: BigInteger
         get() = BigInteger.ONE
-    override val vectorConstructor: (s: Set<VectorEntry<BigInteger>>) -> BigIntegerVector
+    override val vectorConstructor: (l: List<VectorEntry<BigInteger>>) -> BigIntegerVector
         get() = { BigIntegerVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<BigInteger>>) -> BigIntegerMatrix
+        get() = { BigIntegerMatrix(it) }
 }

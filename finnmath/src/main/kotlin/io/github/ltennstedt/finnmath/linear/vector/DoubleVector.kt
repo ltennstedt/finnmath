@@ -24,8 +24,9 @@ import io.github.ltennstedt.finnmath.linear.builder.DoubleVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
 import io.github.ltennstedt.finnmath.linear.builder.bigDecimalVector
 import io.github.ltennstedt.finnmath.linear.builder.complexVector
-import io.github.ltennstedt.finnmath.linear.field.DoubleField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.DoubleQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.DoubleMatrix
 import org.apiguardian.api.API
 import java.math.MathContext
 import kotlin.math.absoluteValue
@@ -45,12 +46,12 @@ import kotlin.math.sqrt
 @Beta
 @Immutable
 public class DoubleVector(
-    entries: Set<VectorEntry<Double>>
+    entries: List<VectorEntry<Double>>
 ) : AbstractVector<Double, Double, DoubleVector, Double, Double>(
     entries
 ) {
-    override val field: Field<Double, Double, DoubleVector>
-        get() = DoubleField
+    override val quotientField: QuotientField<Double, Double, DoubleVector, DoubleMatrix>
+        get() = DoubleQuotientField
 
     override fun taxicabNorm(): Double = elements.map { it.absoluteValue }.reduce { a, b -> a + b }.toDouble()
 

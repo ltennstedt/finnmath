@@ -183,7 +183,7 @@ dependencies {
     implementation("ch.obermuhlner:big-math:2.3.0")
     implementation("com.marcinmoskala:DiscreteMathToolkit:1.0.3")
     implementation("pw.forst:katlib:2.0.2")
-    val kotestVersion = "4.6.0"
+    val kotestVersion = "4.6.1"
     testImplementation("io.kotest:kotest-runner-junit5-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
     testImplementation("io.kotest:kotest-property-jvm:$kotestVersion")

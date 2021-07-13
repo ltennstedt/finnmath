@@ -20,8 +20,9 @@ import com.google.common.annotations.Beta
 import com.google.errorprone.annotations.Immutable
 import io.github.ltennstedt.finnmath.extension.sqrt
 import io.github.ltennstedt.finnmath.linear.builder.BigComplexVectorJavaBuilder
-import io.github.ltennstedt.finnmath.linear.field.BigComplexField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.BigComplexQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.BigComplexMatrix
 import io.github.ltennstedt.finnmath.number.complex.BigComplex
 import org.apiguardian.api.API
 import java.math.BigDecimal
@@ -41,12 +42,12 @@ import java.math.MathContext
 @Beta
 @Immutable
 public class BigComplexVector(
-    entries: Set<VectorEntry<BigComplex>>
+    entries: List<VectorEntry<BigComplex>>
 ) : AbstractVector<BigComplex, BigComplex, BigComplexVector, BigDecimal, BigComplex>(
     entries
 ) {
-    override val field: Field<BigComplex, BigComplex, BigComplexVector>
-        get() = BigComplexField
+    override val quotientField: QuotientField<BigComplex, BigComplex, BigComplexVector, BigComplexMatrix>
+        get() = BigComplexQuotientField
 
     /**
      * Returns the sum of this and the [summand] based on the [mathContext]
@@ -56,9 +57,7 @@ public class BigComplexVector(
      */
     public fun add(summand: BigComplexVector, mathContext: MathContext): BigComplexVector {
         require(size == summand.size) { "Equal sizes expected but $size!=${summand.size}" }
-        return BigComplexVector(
-            entries.sorted().map { (i, e) -> VectorEntry(i, e.add(summand[i], mathContext)) }.toSet()
-        )
+        return BigComplexVector(entries.map { (i, e) -> VectorEntry(i, e.add(summand[i], mathContext)) })
     }
 
     /**
@@ -69,9 +68,7 @@ public class BigComplexVector(
      */
     public fun subtract(subtrahend: BigComplexVector, mathContext: MathContext): BigComplexVector {
         require(size == subtrahend.size) { "Equal sizes expected but $size!=${subtrahend.size}" }
-        return BigComplexVector(
-            entries.sorted().map { (i, e) -> VectorEntry(i, e.subtract(subtrahend[i], mathContext)) }.toSet()
-        )
+        return BigComplexVector(entries.map { (i, e) -> VectorEntry(i, e.subtract(subtrahend[i], mathContext)) })
     }
 
     /**
@@ -82,8 +79,7 @@ public class BigComplexVector(
      */
     public fun dotProduct(other: BigComplexVector, mathContext: MathContext): BigComplex {
         require(size == other.size) { "Equal sizes expected but $size!=${other.size}" }
-        return entries.sorted()
-            .map { (i, e) -> VectorEntry(i, e.multiply(other[i], mathContext)) }
+        return entries.map { (i, e) -> VectorEntry(i, e.multiply(other[i], mathContext)) }
             .map { it.element }
             .reduce { a, b -> a.add(b, mathContext) }
     }
@@ -93,9 +89,8 @@ public class BigComplexVector(
      *
      * @since 0.0.1
      */
-    public fun scalarMultiply(scalar: BigComplex, mathContext: MathContext): BigComplexVector = BigComplexVector(
-        entries.sorted().map { (i, e) -> VectorEntry(i, scalar.multiply(e, mathContext)) }.toSet()
-    )
+    public fun scalarMultiply(scalar: BigComplex, mathContext: MathContext): BigComplexVector =
+        BigComplexVector(entries.map { (i, e) -> VectorEntry(i, scalar.multiply(e, mathContext)) })
 
     /**
      * Returns the negated [AbstractVector] based on the [mathContext]

@@ -29,8 +29,9 @@ import io.github.ltennstedt.finnmath.linear.builder.bigGaussianVector
 import io.github.ltennstedt.finnmath.linear.builder.complexVector
 import io.github.ltennstedt.finnmath.linear.builder.doubleVector
 import io.github.ltennstedt.finnmath.linear.builder.gaussianVector
-import io.github.ltennstedt.finnmath.linear.field.Field
-import io.github.ltennstedt.finnmath.linear.field.LongField
+import io.github.ltennstedt.finnmath.linear.field.LongQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.LongMatrix
 import org.apiguardian.api.API
 import java.math.MathContext
 import kotlin.math.absoluteValue
@@ -50,12 +51,12 @@ import kotlin.math.sqrt
 @Beta
 @Immutable
 public class LongVector(
-    entries: Set<VectorEntry<Long>>
+    entries: List<VectorEntry<Long>>
 ) : AbstractVector<Long, Double, LongVector, Double, Long>(
     entries
 ) {
-    override val field: Field<Long, Double, LongVector>
-        get() = LongField
+    override val quotientField: QuotientField<Long, Double, LongVector, LongMatrix>
+        get() = LongQuotientField
 
     override fun taxicabNorm(): Double = elements.map { it.absoluteValue }.reduce { a, b -> a + b }.toDouble()
 
@@ -80,7 +81,7 @@ public class LongVector(
      * @since 0.0.1
      */
     public fun toBigIntegerVector(): BigIntegerVector =
-        BigIntegerVector(entries.map { (i, e) -> VectorEntry(i, e.toBigInteger()) }.toSet())
+        BigIntegerVector(entries.map { (i, e) -> VectorEntry(i, e.toBigInteger()) })
 
     /**
      * Returns this as [BigDecimalVector]

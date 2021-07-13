@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.matrix
 
 import com.google.common.base.MoreObjects
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
 import io.github.ltennstedt.finnmath.linear.vector.AbstractVector
+import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import java.math.BigDecimal
 import java.math.MathContext
 import java.util.Objects
@@ -49,8 +50,15 @@ public abstract class AbstractMatrix<
     N,
     B
     >(
-    public val entries: Set<MatrixEntry<E>>
+    entries: List<MatrixEntry<E>>
 ) {
+    /**
+     * Entries
+     *
+     * @since 0.0.1
+     */
+    public val entries: List<MatrixEntry<E>> = entries.sorted()
+
     /**
      * Indicates if this is square
      *
@@ -74,8 +82,8 @@ public abstract class AbstractMatrix<
      */
     public val isUpperTriangular: Boolean
         get() = entries.filter { (r, c, _) -> r > c }
-            .map(MatrixEntry<E>::element)
-            .all { this.field.equalityByComparing(it, this.field.zero) }
+            .map { it.element }
+            .all { this.quotientField.equalityByComparing(it, quotientField.zero) }
 
     /**
      * Indicates if this is lower triangular
@@ -84,8 +92,8 @@ public abstract class AbstractMatrix<
      */
     public val isLowerTriangular: Boolean
         get() = entries.filter { (r, c, _) -> r < c }
-            .map(MatrixEntry<E>::element)
-            .all { this.field.equalityByComparing(it, this.field.zero) }
+            .map { it.element }
+            .all { this.quotientField.equalityByComparing(it, quotientField.zero) }
 
     /**
      * Indicates if this is diagonal
@@ -101,7 +109,7 @@ public abstract class AbstractMatrix<
      * @since 0.0.1
      */
     public val isIdentity: Boolean
-        get() = isDiagonal && diagonalElements.all { this.field.equalityByComparing(it, this.field.zero) }
+        get() = isDiagonal && diagonalElements.all { quotientField.equalityByComparing(it, quotientField.zero) }
 
     /**
      * Indicates if this is invertible
@@ -122,46 +130,42 @@ public abstract class AbstractMatrix<
      *
      * @since 0.0.1
      */
-    public val isSkewSymmetric: Boolean by lazy { isSquare && transpose() == negate() }
+    public val isSkewSymmetric: Boolean by lazy { isSquare && transpose().equalsByComparing(negate()) }
 
     /**
      * Row indices
      *
      * @since 0.0.1
      */
-    public val rowIndices: Set<Int> by lazy { entries.map { it.rowIndex }.sorted().toSet() }
+    public val rowIndices: List<Int> by lazy { this.entries.map { it.rowIndex } }
 
     /**
      * Column indices
      *
      * @since 0.0.1
      */
-    public val columnIndices: Set<Int> by lazy { entries.map { it.columnIndex }.sorted().toSet() }
+    public val columnIndices: List<Int> by lazy { this.entries.map { it.columnIndex } }
 
     /**
      * Elements
      *
      * @since 0.0.1
      */
-    public val elements: List<E> by lazy { entries.sorted().map { it.element }.toList() }
+    public val elements: List<E> by lazy { this.entries.map { it.element } }
 
     /**
      * Diagonal elements
      *
      * @since 0.0.1
      */
-    public val diagonalElements: List<E> by lazy {
-        entries.filter { (r, c, _) -> r == c }.map(MatrixEntry<E>::element)
-    }
+    public val diagonalElements: List<E> by lazy { this.entries.filter { (r, c, _) -> r == c }.map { it.element } }
 
     /**
      * Diagonal [MatrixEntries][MatrixEntry]
      *
      * @since 0.0.1
      */
-    public val diagonalEntries: Set<MatrixEntry<E>> by lazy {
-        entries.sorted().filter { (r, c, _) -> r == c }.toSet()
-    }
+    public val diagonalEntries: List<MatrixEntry<E>> by lazy { this.entries.filter { (r, c, _) -> r == c } }
 
     /**
      * Row size
@@ -184,15 +188,15 @@ public abstract class AbstractMatrix<
      *
      * @since 0.0.1
      */
-    protected abstract val field: Field<E, Q, V>
+    protected abstract val quotientField: QuotientField<E, Q, V, M>
 
     init {
         require(entries.isNotEmpty()) { "expected entries not be empty but entries = $entries" }
-        val expectedRowIndices = (1..rowSize).toSet()
+        val expectedRowIndices = (1..rowSize).toList()
         require(rowIndices == expectedRowIndices) {
             "expected rowIndices == expectedRowIndices but $rowIndices != $expectedRowIndices"
         }
-        val expectedColumnIndices = (1..columnSize).toSet()
+        val expectedColumnIndices = (1..columnSize).toList()
         require(columnIndices == expectedColumnIndices) {
             "expected columnIndices == expectedColumnIndices but $columnIndices != $expectedColumnIndices"
         }
@@ -205,7 +209,15 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnSize] != `summand.columnSize`
      * @since 0.0.1
      */
-    public abstract fun add(summand: M): M
+    public fun add(summand: M): M {
+        require(rowSize == summand.rowSize) { "Equal row sizes expected but $rowSize != ${summand.rowSize}" }
+        require(columnSize == summand.columnSize) {
+            "Equal column sizes expected but $columnSize != ${summand.columnSize}"
+        }
+        return quotientField.matrixConstructor(
+            entries.map { (r, c, e) -> MatrixEntry(r, c, quotientField.addition(e, summand[r, c])) }
+        )
+    }
 
     /**
      * Returns the difference of this and the [subtrahend]
@@ -214,7 +226,15 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnSize] != `subtrahend.columnSize`
      * @since 0.0.1
      */
-    public abstract fun subtract(subtrahend: M): M
+    public fun subtract(subtrahend: M): M {
+        require(rowSize == subtrahend.rowSize) { "Equal row sizes expected but $rowSize != ${subtrahend.rowSize}" }
+        require(columnSize == subtrahend.columnSize) {
+            "Equal column sizes expected but $columnSize != ${subtrahend.columnSize}"
+        }
+        return quotientField.matrixConstructor(
+            entries.map { (r, c, e) -> MatrixEntry(r, c, quotientField.subtraction(e, subtrahend[r, c])) }
+        )
+    }
 
     /**
      * Returns the product of this and the [factor]
@@ -222,7 +242,12 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnSize] != `factor.rowSize`
      * @since 0.0.1
      */
-    public abstract fun multiply(factor: M): M
+    public fun multiply(factor: M): M {
+        require(columnSize == factor.rowSize) {
+            "Equal column sizes expected but $columnSize != ${factor.rowSize}"
+        }
+        TODO()
+    }
 
     /**
      * Returns the product of this and the [vector]
@@ -230,21 +255,28 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnSize] != `vector.size`
      * @since 0.0.1
      */
-    public abstract fun multiplyVector(vector: V): V
+    public fun multiplyVector(vector: V): V {
+        require(columnSize == vector.size) {
+            "columnSize == vector.size expected but $columnSize != ${vector.size}"
+        }
+        TODO()
+    }
 
     /**
      * Returns the scalar product of this and the [scalar]
      *
      * @since 0.0.1
      */
-    public abstract fun scalarMultiply(scalar: E): M
+    public fun scalarMultiply(scalar: E): M = quotientField.matrixConstructor(
+        entries.map { (r, c, e) -> MatrixEntry(r, c, quotientField.multiplication(scalar, e)) }
+    )
 
     /**
      * Returns the negated [AbstractMatrix] and this
      *
      * @since 0.0.1
      */
-    public abstract fun negate(): M
+    public fun negate(): M = scalarMultiply(quotientField.negation(quotientField.one))
 
     /**
      * Returns the trace
@@ -273,7 +305,7 @@ public abstract class AbstractMatrix<
      *
      * @since 0.0.1
      */
-    public abstract fun transpose(): M
+    public fun transpose(): M = quotientField.matrixConstructor(entries.map { (i, c, e) -> MatrixEntry(c, i, e) })
 
     /**
      * Returns the minor dependent on the [rowIndex] and [columnIndex]
@@ -282,7 +314,13 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnIndex] !in 1..[columnSize]
      * @since 0.0.1
      */
-    public abstract fun minor(rowIndex: Int, columnIndex: Int): M
+    public fun minor(rowIndex: Int, columnIndex: Int): M {
+        require(rowIndex in 1..rowSize) { "expected rowIndex in 1..$rowSize but rowIndex = $rowIndex" }
+        require(columnIndex in 1..columnSize) {
+            "expected columnIndex in 1..$columnSize but columnIndex = $columnIndex"
+        }
+        TODO()
+    }
 
     /**
      * Returns the maximum absolute column sum norm
@@ -380,7 +418,12 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [rowIndex] !in 1..[rowSize]
      * @since 0.0.1
      */
-    public abstract fun rowVector(rowIndex: Int): V
+    public fun rowVector(rowIndex: Int): V {
+        require(rowIndex in 1..rowSize) { "expected rowIndex in 1..$rowSize but rowIndex = $rowIndex" }
+        return quotientField.vectorConstructor(
+            entries.filter { it.rowIndex == rowIndex }.map { (_, c, e) -> VectorEntry(c, e) }
+        )
+    }
 
     /**
      * Returns the column vector at the [columnIndex]
@@ -388,7 +431,14 @@ public abstract class AbstractMatrix<
      * @throws IllegalArgumentException if [columnIndex] !in 1..[columnSize]
      * @since 0.0.1
      */
-    public abstract fun columnVector(columnIndex: Int): V
+    public fun columnVector(columnIndex: Int): V {
+        require(columnIndex in 1..columnSize) {
+            "expected columnIndex in 1..$columnSize but columnIndex = $columnIndex"
+        }
+        return quotientField.vectorConstructor(
+            entries.filter { it.columnIndex == columnIndex }.map { (r, _, e) -> VectorEntry(r, e) }
+        )
+    }
 
     /**
      * Returns if [element] is contained in [V]
@@ -405,7 +455,7 @@ public abstract class AbstractMatrix<
      * @since 0.0.1
      */
     public fun equalsByComparing(other: M): Boolean =
-        entries.all { (r, c, e) -> field.equalityByComparing(e, other[r, c]) }
+        entries.all { (r, c, e) -> quotientField.equalityByComparing(e, other[r, c]) }
 
     /**
      * Returns if this is not equal to [other] by comparing elements
@@ -421,7 +471,7 @@ public abstract class AbstractMatrix<
      *
      * @since 0.0.1
      */
-    protected fun addDiagonalElements(): E = elements.reduce { a, b -> field.addition(a, b) }
+    protected fun addDiagonalElements(): E = elements.reduce { a, b -> quotientField.addition(a, b) }
 
     /**
      * Leibniz formula
@@ -429,7 +479,7 @@ public abstract class AbstractMatrix<
      * @return determinant
      * @since 0.0.1
      */
-    protected abstract fun leibnizFormula(): E
+    protected fun leibnizFormula(): E = TODO()
 
     /**
      * Rule of Sarrus
@@ -437,7 +487,7 @@ public abstract class AbstractMatrix<
      * @return determinant
      * @since 0.0.1
      */
-    protected abstract fun ruleOfSarrus(): E
+    protected fun ruleOfSarrus(): E = TODO()
 
     /**
      * Calculate determinant of a 2x2 matrix
@@ -445,7 +495,7 @@ public abstract class AbstractMatrix<
      * @return determinant
      * @since 0.0.1
      */
-    protected abstract fun determinantOf2x2Matrix(): E
+    protected fun determinantOf2x2Matrix(): E = TODO()
 
     override fun hashCode(): Int = Objects.hash(entries)
 

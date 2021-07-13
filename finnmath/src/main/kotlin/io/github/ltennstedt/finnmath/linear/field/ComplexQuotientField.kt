@@ -16,17 +16,19 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.ComplexMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.ComplexVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.Complex
 
 /**
- * Single implementation of a [Field] of [Complexes][Complex]
+ * Single implementation of a [QuotientField] of [Complexes][Complex]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object ComplexField : Field<Complex, Complex, ComplexVector> {
+public object ComplexQuotientField : QuotientField<Complex, Complex, ComplexVector, ComplexMatrix> {
     override val addition: (a: Complex, b: Complex) -> Complex
         get() = Complex::add
     override val subtraction: (a: Complex, b: Complex) -> Complex
@@ -43,6 +45,8 @@ public object ComplexField : Field<Complex, Complex, ComplexVector> {
         get() = Complex.ZERO
     override val one: Complex
         get() = Complex.ONE
-    override val vectorConstructor: (s: Set<VectorEntry<Complex>>) -> ComplexVector
+    override val vectorConstructor: (l: List<VectorEntry<Complex>>) -> ComplexVector
         get() = { ComplexVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<Complex>>) -> ComplexMatrix
+        get() = { ComplexMatrix(it) }
 }

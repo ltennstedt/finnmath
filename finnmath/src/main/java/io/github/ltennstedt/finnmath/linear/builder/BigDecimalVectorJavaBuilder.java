@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.BigDecimalField;
-import io.github.ltennstedt.finnmath.linear.field.Field;
+import io.github.ltennstedt.finnmath.linear.field.BigDecimalQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.BigDecimalMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.BigDecimalVector;
 import java.math.BigDecimal;
 import org.apiguardian.api.API;
@@ -46,7 +47,7 @@ public final class BigDecimalVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<BigDecimal, BigDecimal, BigDecimalVector> getField() {
-        return BigDecimalField.INSTANCE;
+    protected @NotNull QuotientField<BigDecimal, BigDecimal, BigDecimalVector, BigDecimalMatrix> getField() {
+        return BigDecimalQuotientField.INSTANCE;
     }
 }

@@ -16,18 +16,20 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.GaussianMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.GaussianVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.Complex
 import io.github.ltennstedt.finnmath.number.complex.Gaussian
 
 /**
- * Single implementation of a [Field] of [Gaussians][Gaussian]
+ * Single implementation of a [QuotientField] of [Gaussians][Gaussian]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object GaussianField : Field<Gaussian, Complex, GaussianVector> {
+public object GaussianQuotientField : QuotientField<Gaussian, Complex, GaussianVector, GaussianMatrix> {
     override val addition: (a: Gaussian, b: Gaussian) -> Gaussian
         get() = Gaussian::add
     override val subtraction: (a: Gaussian, b: Gaussian) -> Gaussian
@@ -44,6 +46,8 @@ public object GaussianField : Field<Gaussian, Complex, GaussianVector> {
         get() = Gaussian.ZERO
     override val one: Gaussian
         get() = Gaussian.ONE
-    override val vectorConstructor: (s: Set<VectorEntry<Gaussian>>) -> GaussianVector
+    override val vectorConstructor: (l: List<VectorEntry<Gaussian>>) -> GaussianVector
         get() = { GaussianVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<Gaussian>>) -> GaussianMatrix
+        get() = { GaussianMatrix(it) }
 }

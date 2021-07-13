@@ -16,7 +16,7 @@
 
 package io.github.ltennstedt.finnmath.linear.builder
 
-import io.github.ltennstedt.finnmath.linear.field.BigGaussianField
+import io.github.ltennstedt.finnmath.linear.field.BigGaussianQuotientField
 import io.github.ltennstedt.finnmath.linear.vector.BigGaussianVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.BigGaussian
@@ -41,6 +41,6 @@ public fun bigGaussianVector(init: BigGaussianVectorBuilder.() -> Unit): BigGaus
  */
 public class BigGaussianVectorBuilder : AbstractVectorBuilder<BigGaussian, BigGaussianVector>() {
     override var computationOfAbsent: (Int) -> BigGaussian = { _ -> BigGaussian.ZERO }
-    override val vectorConstructor: (s: Set<VectorEntry<BigGaussian>>) -> BigGaussianVector
-        get() = BigGaussianField.vectorConstructor
+    override val vectorConstructor: (l: List<VectorEntry<BigGaussian>>) -> BigGaussianVector
+        get() = BigGaussianQuotientField.vectorConstructor
 }

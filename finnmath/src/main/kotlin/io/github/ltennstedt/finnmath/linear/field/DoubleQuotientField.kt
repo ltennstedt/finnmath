@@ -16,16 +16,18 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.DoubleMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.DoubleVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 
 /**
- * Single implementation of a [Field] of [Doubles][Double]
+ * Single implementation of a [QuotientField] of [Doubles][Double]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object DoubleField : Field<Double, Double, DoubleVector> {
+public object DoubleQuotientField : QuotientField<Double, Double, DoubleVector, DoubleMatrix> {
     override val addition: (a: Double, b: Double) -> Double
         get() = { a, b -> a + b }
     override val subtraction: (a: Double, b: Double) -> Double
@@ -42,6 +44,8 @@ public object DoubleField : Field<Double, Double, DoubleVector> {
         get() = 0.0
     override val one: Double
         get() = 1.0
-    override val vectorConstructor: (s: Set<VectorEntry<Double>>) -> DoubleVector
+    override val vectorConstructor: (l: List<VectorEntry<Double>>) -> DoubleVector
         get() = { DoubleVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<Double>>) -> DoubleMatrix
+        get() = { DoubleMatrix(it) }
 }

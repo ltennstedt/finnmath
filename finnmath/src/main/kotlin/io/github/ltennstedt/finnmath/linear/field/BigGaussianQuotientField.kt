@@ -16,18 +16,20 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.BigGaussianMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.BigGaussianVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.BigComplex
 import io.github.ltennstedt.finnmath.number.complex.BigGaussian
 
 /**
- * Single implementation of a [Field] of [BigGaussians][BigGaussian]
+ * Single implementation of a [QuotientField] of [BigGaussians][BigGaussian]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object BigGaussianField : Field<BigGaussian, BigComplex, BigGaussianVector> {
+public object BigGaussianQuotientField : QuotientField<BigGaussian, BigComplex, BigGaussianVector, BigGaussianMatrix> {
     override val addition: (a: BigGaussian, b: BigGaussian) -> BigGaussian
         get() = BigGaussian::add
     override val subtraction: (a: BigGaussian, b: BigGaussian) -> BigGaussian
@@ -44,6 +46,8 @@ public object BigGaussianField : Field<BigGaussian, BigComplex, BigGaussianVecto
         get() = BigGaussian.ZERO
     override val one: BigGaussian
         get() = BigGaussian.ONE
-    override val vectorConstructor: (s: Set<VectorEntry<BigGaussian>>) -> BigGaussianVector
+    override val vectorConstructor: (l: List<VectorEntry<BigGaussian>>) -> BigGaussianVector
         get() = { BigGaussianVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<BigGaussian>>) -> BigGaussianMatrix
+        get() = { BigGaussianMatrix(it) }
 }

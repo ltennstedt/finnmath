@@ -22,8 +22,9 @@ import io.github.ltennstedt.finnmath.FinnmathContext
 import io.github.ltennstedt.finnmath.extension.sqrt
 import io.github.ltennstedt.finnmath.linear.builder.BigGaussianVectorJavaBuilder
 import io.github.ltennstedt.finnmath.linear.builder.bigComplexVector
-import io.github.ltennstedt.finnmath.linear.field.BigGaussianField
-import io.github.ltennstedt.finnmath.linear.field.Field
+import io.github.ltennstedt.finnmath.linear.field.BigGaussianQuotientField
+import io.github.ltennstedt.finnmath.linear.field.QuotientField
+import io.github.ltennstedt.finnmath.linear.matrix.BigGaussianMatrix
 import io.github.ltennstedt.finnmath.number.complex.BigComplex
 import io.github.ltennstedt.finnmath.number.complex.BigGaussian
 import org.apiguardian.api.API
@@ -44,44 +45,42 @@ import java.math.MathContext
 @Beta
 @Immutable
 public class BigGaussianVector(
-    entries: Set<VectorEntry<BigGaussian>>
+    entries: List<VectorEntry<BigGaussian>>
 ) : AbstractVector<BigGaussian, BigComplex, BigGaussianVector, BigDecimal, BigGaussian>(
     entries
 ) {
-    override val field: Field<BigGaussian, BigComplex, BigGaussianVector>
-        get() = BigGaussianField
+    override val quotientField: QuotientField<BigGaussian, BigComplex, BigGaussianVector, BigGaussianMatrix>
+        get() = BigGaussianQuotientField
 
-    override fun taxicabNorm(): BigDecimal = elements.map(BigGaussian::abs).reduce(BigDecimal::add)
+    override fun taxicabNorm(): BigDecimal = elements.map { it.abs() }.reduce { a, b -> a + b }
 
     /**
      * Returns the taxicab norm based on the [mathContext]
      *
      * @since 0.0.1
      */
-    public fun taxicabNorm(mathContext: MathContext): BigDecimal = elements.map { it.abs(mathContext) }
-        .reduce { a, b -> a.add(b, mathContext) }
+    public fun taxicabNorm(mathContext: MathContext): BigDecimal =
+        elements.map { it.abs(mathContext) }.reduce { a, b -> a.add(b, mathContext) }
 
     /**
      * Returns the taxicab norm based on the [context]
      *
      * @since 0.0.1
      */
-    public fun taxicabNorm(context: FinnmathContext): BigDecimal = elements.map { it.abs(context) }
-        .reduce { a, b -> a.add(b, context.mathContext) }
+    public fun taxicabNorm(context: FinnmathContext): BigDecimal =
+        elements.map { it.abs(context) }.reduce { a, b -> a.add(b, context.mathContext) }
 
     override fun euclideanNormPow2(): BigGaussian = this * this
 
-    override fun euclideanNorm(): BigDecimal =
-        elements.map { it.abs().pow(2) }.reduce { a, b -> a + b }.sqrt()
+    override fun euclideanNorm(): BigDecimal = elements.map { it.abs().pow(2) }.reduce { a, b -> a + b }.sqrt()
 
     /**
      * Returns the euclidean norm based on the [mathContext]
      *
      * @since 0.0.1
      */
-    public fun euclideanNorm(mathContext: MathContext): BigDecimal = elements.map { it.abs(mathContext).pow(2) }
-        .reduce { a, b -> a.add(b, mathContext) }
-        .sqrt(mathContext)
+    public fun euclideanNorm(mathContext: MathContext): BigDecimal =
+        elements.map { it.abs(mathContext).pow(2) }.reduce { a, b -> a.add(b, mathContext) }.sqrt(mathContext)
 
     /**
      * Returns the euclidean norm based on the [context]
@@ -92,7 +91,7 @@ public class BigGaussianVector(
         .reduce { a, b -> a.add(b, context.mathContext) }
         .sqrt(context.mathContext)
 
-    override fun maxNorm(): BigDecimal = elements.map(BigGaussian::abs).maxOrNull() as BigDecimal
+    override fun maxNorm(): BigDecimal = elements.map { it.abs() }.maxOrNull() as BigDecimal
 
     /**
      * Returns the maximum norm based on the [mathContext]

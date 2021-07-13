@@ -16,6 +16,8 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.AbstractMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.AbstractVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 
@@ -25,10 +27,16 @@ import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
  * @param E type of elements
  * @param Q type of quotient
  * @param V type of vector
+ * @param M type of matrix
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public interface Field<E : Number, Q : Number, V : AbstractVector<E, Q, V, *, *>> {
+public interface QuotientField<
+    E : Number,
+    Q : Number,
+    V : AbstractVector<E, Q, V, *, *>,
+    M : AbstractMatrix<E, Q, V, M, *, *>
+    > {
     /**
      * Addition
      *
@@ -90,5 +98,12 @@ public interface Field<E : Number, Q : Number, V : AbstractVector<E, Q, V, *, *>
      *
      * @since 0.0.1
      */
-    public val vectorConstructor: (s: Set<VectorEntry<E>>) -> V
+    public val vectorConstructor: (l: List<VectorEntry<E>>) -> V
+
+    /**
+     * Matrix constructor
+     *
+     * @since 0.0.1
+     */
+    public val matrixConstructor: (l: List<MatrixEntry<E>>) -> M
 }

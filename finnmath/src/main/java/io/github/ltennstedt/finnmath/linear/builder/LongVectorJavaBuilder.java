@@ -17,8 +17,9 @@
 package io.github.ltennstedt.finnmath.linear.builder;
 
 import com.google.common.annotations.Beta;
-import io.github.ltennstedt.finnmath.linear.field.Field;
-import io.github.ltennstedt.finnmath.linear.field.LongField;
+import io.github.ltennstedt.finnmath.linear.field.LongQuotientField;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
+import io.github.ltennstedt.finnmath.linear.matrix.LongMatrix;
 import io.github.ltennstedt.finnmath.linear.vector.LongVector;
 import org.apiguardian.api.API;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +46,7 @@ public final class LongVectorJavaBuilder extends
     }
 
     @Override
-    protected @NotNull Field<Long, Double, LongVector> getField() {
-        return LongField.INSTANCE;
+    protected @NotNull QuotientField<Long, Double, LongVector, LongMatrix> getField() {
+        return LongQuotientField.INSTANCE;
     }
 }

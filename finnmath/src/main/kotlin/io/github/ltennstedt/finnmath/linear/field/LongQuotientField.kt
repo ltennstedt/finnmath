@@ -16,16 +16,18 @@
 
 package io.github.ltennstedt.finnmath.linear.field
 
+import io.github.ltennstedt.finnmath.linear.matrix.LongMatrix
+import io.github.ltennstedt.finnmath.linear.matrix.MatrixEntry
 import io.github.ltennstedt.finnmath.linear.vector.LongVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 
 /**
- * Single implementation of a [Field] of [Longs][Long]
+ * Single implementation of a [QuotientField] of [Longs][Long]
  *
  * @author Lars Tennstedt
  * @since 0.0.1
  */
-public object LongField : Field<Long, Double, LongVector> {
+public object LongQuotientField : QuotientField<Long, Double, LongVector, LongMatrix> {
     override val addition: (a: Long, b: Long) -> Long
         get() = { a, b -> a + b }
     override val subtraction: (a: Long, b: Long) -> Long
@@ -42,6 +44,8 @@ public object LongField : Field<Long, Double, LongVector> {
         get() = 0L
     override val one: Long
         get() = 1L
-    override val vectorConstructor: (s: Set<VectorEntry<Long>>) -> LongVector
+    override val vectorConstructor: (l: List<VectorEntry<Long>>) -> LongVector
         get() = { LongVector(it) }
+    override val matrixConstructor: (l: List<MatrixEntry<Long>>) -> LongMatrix
+        get() = { LongMatrix(it) }
 }

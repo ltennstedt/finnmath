@@ -21,11 +21,11 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.MoreObjects;
-import io.github.ltennstedt.finnmath.linear.field.Field;
+import io.github.ltennstedt.finnmath.linear.field.QuotientField;
 import io.github.ltennstedt.finnmath.linear.vector.AbstractVector;
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
 import org.apiguardian.api.API;
@@ -49,7 +49,7 @@ public abstract class AbstractVectorJavaBuilder<
     V extends AbstractVector<E, Q, V, ?, ?>,
     B extends AbstractVectorJavaBuilder<E, Q, V, B>
     > {
-    private final @NotNull Set<VectorEntry<E>> entries = new HashSet<>();
+    private final @NotNull List<VectorEntry<E>> entries = new ArrayList<>();
     private final int size;
     private @NotNull IntFunction<E> computationOfAbsent = i -> getField().getZero();
 
@@ -137,7 +137,7 @@ public abstract class AbstractVectorJavaBuilder<
      * @return field
      * @since 0.0.1
      */
-    protected abstract @NotNull Field<E, Q, V> getField();
+    protected abstract @NotNull QuotientField<E, Q, V, ?> getField();
 
     @Override
     public final @NotNull String toString() {

@@ -16,7 +16,7 @@
 
 package io.github.ltennstedt.finnmath.linear.builder
 
-import io.github.ltennstedt.finnmath.linear.field.GaussianField
+import io.github.ltennstedt.finnmath.linear.field.GaussianQuotientField
 import io.github.ltennstedt.finnmath.linear.vector.GaussianVector
 import io.github.ltennstedt.finnmath.linear.vector.VectorEntry
 import io.github.ltennstedt.finnmath.number.complex.Gaussian
@@ -41,6 +41,6 @@ public fun gaussianVector(init: GaussianVectorBuilder.() -> Unit): GaussianVecto
  */
 public class GaussianVectorBuilder : AbstractVectorBuilder<Gaussian, GaussianVector>() {
     override var computationOfAbsent: (Int) -> Gaussian = { _ -> Gaussian.ZERO }
-    override val vectorConstructor: (s: Set<VectorEntry<Gaussian>>) -> GaussianVector
-        get() = GaussianField.vectorConstructor
+    override val vectorConstructor: (l: List<VectorEntry<Gaussian>>) -> GaussianVector
+        get() = GaussianQuotientField.vectorConstructor
 }
